@@ -1,7 +1,8 @@
+using Terrain;
 using UnityEditor;
 using UnityEngine;
 
-namespace SandAndFrost.World.EditorTools
+namespace Editor
 {
     static class SandTerrainMenu
     {
@@ -11,7 +12,6 @@ namespace SandAndFrost.World.EditorTools
             var go = new GameObject("SandTerrain");
             Undo.RegisterCreatedObjectUndo(go, "Create Sand Terrain");
 
-            // RequireComponent 会顺带补上 MeshFilter / MeshRenderer / MeshCollider。
             var generator = go.AddComponent<SandTerrainGenerator>();
             generator.Rebuild();
 

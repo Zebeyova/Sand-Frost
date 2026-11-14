@@ -1,11 +1,9 @@
 using UnityEngine;
-#if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
-#endif
 
-namespace StarterAssets
+namespace Base
 {
-	public class StarterAssetsInputs : MonoBehaviour
+	public class PlayerInputs : MonoBehaviour
 	{
 		[Header("Character Input Values")]
 		public Vector2 move;
