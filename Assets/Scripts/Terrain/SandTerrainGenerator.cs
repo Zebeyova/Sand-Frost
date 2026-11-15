@@ -19,8 +19,8 @@ namespace Terrain
     public sealed class SandTerrainGenerator : MonoBehaviour
     {
         [Header("尺寸")]
-        [Tooltip("地形边长（米）。多块拼合时改为按 tileSize 自动对齐世界网格。")]
-        [SerializeField] float size = 120f;
+        [Tooltip("地形边长（米）。单块探索场景建议 1500~2000 米。")]
+        [SerializeField] float size = 2000f;
 
         [Header("无缝拼合")]
         [Tooltip("勾选后按世界网格坐标采样高度场：相邻地块共用同一张无限噪声，接缝天然对齐。\n" +
@@ -34,30 +34,33 @@ namespace Terrain
         [Tooltip("勾选后每次重建都根据物体 Transform 的世界位置自动推算 tileCoord，避免手动摆位对不上。")]
         [SerializeField] bool autoTileFromTransform = true;
 
-        [Tooltip("视觉网格每边顶点数。必须 <= 256 才能压进 16 位索引；(2^n)+1 的手感最好。")]
-        [SerializeField, Min(2)] int resolution = 241;
+        [Tooltip("视觉网格每边顶点数。513 时 2000 米地图每格约 3.9 米；需要更细近景时可升到 1025。")]
+        [SerializeField, Min(2)] int resolution = 513;
 
-        [Tooltip("碰撞网格每边顶点数。物理不需要视觉精度，65 足够，且 cooking 只要几毫秒。")]
-        [SerializeField, Min(2)] int colliderResolution = 65;
+        [Tooltip("视觉法线使用的高度采样半径（以网格格子为单位）。更大的值会让沙脊明暗更平滑。")]
+        [SerializeField, Range(1, 4)] int normalSampleRadius = 2;
+
+        [Tooltip("碰撞网格每边顶点数。129 对角色移动已经足够，视觉网格和碰撞网格可以保持不同精度。")]
+        [SerializeField, Min(2)] int colliderResolution = 129;
 
         [Header("高度场")]
         [SerializeField] HeightFieldSettings height = new HeightFieldSettings
         {
-            version = 2,
+            version = 3,
             seed = 2024,
-            octaves = 6,
-            frequency = 3.8f,
-            amplitude = 22f,
-            persistence = 0.48f,
-            lacunarity = 2.1f,
-            ridgeStrength = 0.7f,
-            duneSharpness = 1.2f,
-            warpStrength = 0.5f,
-            warpScale = 2f,
-            macroAmplitude = 0.55f,
-            macroFrequency = 1.6f,
-            macroOctaves = 3,
-            windStretch = 5.5f,
+            octaves = 4,
+            frequency = 4f,
+            amplitude = 20f,
+            persistence = 0.42f,
+            lacunarity = 1.9f,
+            ridgeStrength = 0.25f,
+            duneSharpness = 1f,
+            warpStrength = 0.16f,
+            warpScale = 1.25f,
+            macroAmplitude = 0.3f,
+            macroFrequency = 0.55f,
+            macroOctaves = 2,
+            windStretch = 6f,
             windDirection = new Vector2(1f, 0.35f),
         };
 
@@ -86,22 +89,42 @@ namespace Terrain
         }
 
         /// <summary>
-        /// 老场景里反序列化出来的 HeightFieldSettings 没有新字段（都是 0），
-        /// 这里给它们填上默认值，避免旧地形忽然变成直条纹 / 没有远景层。
+        /// Keep legacy serialized fields valid while marking them as migrated to the current model.
         /// </summary>
         void Migrate()
         {
-            if (height.version >= 2)
+            if (height.version >= 3)
                 return;
 
-            height.version = 2;
-            if (height.warpStrength <= 0f) height.warpStrength = 0.5f;
-            if (height.warpScale <= 0f) height.warpScale = 2f;
-            if (height.macroAmplitude <= 0f) height.macroAmplitude = 0.55f;
-            if (height.macroFrequency <= 0f) height.macroFrequency = 1.6f;
-            if (height.macroOctaves <= 0) height.macroOctaves = 3;
-            // 只有没动过的旧默认值（12m）才抬到新默认（22m），用户自己调过的不碰。
-            if (Mathf.Abs(height.amplitude - 12f) < 0.01f) height.amplitude = 22f;
+            // Version 2 used a fixed 1000 m noise span and much sharper 50 m dunes.
+            // Replace that serialized preset as a whole so existing scenes actually use
+            // the new 2000 m desert profile instead of retaining the old terrain shape.
+            int seed = height.seed == 0 ? 2024 : height.seed;
+            height = new HeightFieldSettings
+            {
+                version = 3,
+                seed = seed,
+                octaves = 4,
+                frequency = 4f,
+                amplitude = 20f,
+                persistence = 0.42f,
+                lacunarity = 1.9f,
+                ridgeStrength = 0.25f,
+                duneSharpness = 1f,
+                warpStrength = 0.16f,
+                warpScale = 1.25f,
+                macroAmplitude = 0.3f,
+                macroFrequency = 0.55f,
+                macroOctaves = 2,
+                windStretch = 6f,
+                windDirection = new Vector2(1f, 0.35f),
+            };
+
+            if (Mathf.Approximately(size, 1000f)) size = 2000f;
+            if (resolution == 255) resolution = 513;
+            if (colliderResolution == 256) colliderResolution = 129;
+            if (normalSampleRadius <= 0) normalSampleRadius = 2;
+
             _dirty = true;
         }
 
@@ -199,6 +222,7 @@ namespace Terrain
 
             int count = side * side;
             var vertices = new Vector3[count];
+            var heights = new float[count];
             var normals = new Vector3[count];
             var uv0 = new Vector2[count];
             var uv1 = new Vector2[count];
@@ -229,35 +253,48 @@ namespace Terrain
                     // 非拼合时按本块归一化坐标采样，并把 size 传进去，
                     // 保证 Frequency 的语义（整块地形上几个沙丘）在两种模式下一致。
                     float h = tileable
-                        ? SandHeightField.SampleWorld(height, worldX, worldZ)
+                        ? SandHeightField.SampleWorld(height, worldX, worldZ, size)
                         : SandHeightField.Sample(height, u, v, size);
 
+                    heights[i] = h;
                     vertices[i] = new Vector3(localX, h, localZ);
                     uv0[i] = new Vector2(u, v);
                     uv1[i] = new Vector2(worldX, worldZ);
                 }
             }
 
-            // 法线直接用相邻格点的高差算，和实际渲染出来的几何完全一致。
-            // 比 RecalculateNormals() 快，也不会被后面 shader 里的顶点位移带偏。
+            // Use a wider finite-difference window for the visual mesh. At tile
+            // borders, sample the continuous height field outside the local mesh
+            // so adjacent tiles receive the same normal at their shared edge.
+            int radius = visual ? Mathf.Clamp(normalSampleRadius, 1, 4) : 1;
+            float normalStep = cell * radius;
+            float uvStep = (float)radius / (side - 1);
             for (int z = 0; z < side; z++)
             {
-                int zm = Mathf.Max(z - 1, 0);
-                int zp = Mathf.Min(z + 1, side - 1);
-                float dz = (zp - zm) * cell;
-
                 for (int x = 0; x < side; x++)
                 {
-                    int xm = Mathf.Max(x - 1, 0);
-                    int xp = Mathf.Min(x + 1, side - 1);
-                    float dx = (xp - xm) * cell;
+                    int i = z * side + x;
+                    float u = (float)x / (side - 1);
+                    float v = (float)z / (side - 1);
+                    float localX = -halfSize + x * cell;
+                    float localZ = -halfSize + z * cell;
+                    float worldX = tileCenter.x + localX;
+                    float worldZ = tileCenter.y + localZ;
 
-                    float hL = vertices[z * side + xm].y;
-                    float hR = vertices[z * side + xp].y;
-                    float hD = vertices[zm * side + x].y;
-                    float hU = vertices[zp * side + x].y;
+                    float hL = SampleNeighborHeight(heights, side, x - radius, z,
+                        worldX - normalStep, worldZ, u - uvStep, v);
+                    float hR = SampleNeighborHeight(heights, side, x + radius, z,
+                        worldX + normalStep, worldZ, u + uvStep, v);
+                    float hD = SampleNeighborHeight(heights, side, x, z - radius,
+                        worldX, worldZ - normalStep, u, v - uvStep);
+                    float hU = SampleNeighborHeight(heights, side, x, z + radius,
+                        worldX, worldZ + normalStep, u, v + uvStep);
 
-                    normals[z * side + x] = new Vector3((hL - hR) / dx, 1f, (hD - hU) / dz).normalized;
+                    normals[i] = new Vector3(
+                        (hL - hR) / (2f * normalStep),
+                        1f,
+                        (hD - hU) / (2f * normalStep)
+                    ).normalized;
                 }
             }
 
@@ -295,7 +332,20 @@ namespace Terrain
             }
 
             mesh.SetTriangles(triangles, 0);
+            if (visual)
+                mesh.RecalculateTangents();
             mesh.RecalculateBounds();
+        }
+
+        float SampleNeighborHeight(float[] heights, int side, int x, int z,
+            float worldX, float worldZ, float u, float v)
+        {
+            if (x >= 0 && x < side && z >= 0 && z < side)
+                return heights[z * side + x];
+
+            return tileable
+                ? SandHeightField.SampleWorld(height, worldX, worldZ, size)
+                : SandHeightField.Sample(height, u, v, size);
         }
 
         /// <summary>
@@ -308,7 +358,7 @@ namespace Terrain
         public float SampleHeightWorld(float worldX, float worldZ)
         {
             if (tileable)
-                return SandHeightField.SampleWorld(height, worldX, worldZ);
+                return SandHeightField.SampleWorld(height, worldX, worldZ, size);
 
             // 单块模式：物体原地不动时，把世界坐标转回本块归一化坐标。
             Vector3 origin = transform.position;
