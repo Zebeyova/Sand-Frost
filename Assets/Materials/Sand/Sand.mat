@@ -83,6 +83,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _TrailSand:
+        m_Texture: {fileID: 8400000, guid: e6d54c0307d7b164c9dbecc8fe29452b, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _albedoMap:
         m_Texture: {fileID: 2800000, guid: 302226312c31a4242bd040602b9a9be8, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -156,6 +160,9 @@ Material:
     - _StateProgress: 0
     - _StateRadius: 14
     - _Surface: 0
+    - _TrailDepth: 0.041
+    - _TrailScale: 0
+    - _TrailStrength: 0.241
     - _WorkflowMode: 1
     - _XRMotionVectorsPass: 1
     - _ZWrite: 1
@@ -173,6 +180,7 @@ Material:
     - _SpecularTint: {r: 1, g: 0.95, b: 0.86, a: 1}
     - _StateCenter: {r: 0, g: 0, b: 0, a: 0}
     - _StormColor: {r: 0.78, g: 0.65999997, b: 0.5, a: 1}
+    - _TrailColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &2321069434125628900

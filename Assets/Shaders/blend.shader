@@ -1,0 +1,75 @@
+Shader "Zebeyova/URP/blend"
+{
+    Properties
+    {
+        [MainTexture]
+        _BaseMap ("Base Map", 2D) = "white" {}
+        [MainColor]
+        _BaseColor ("Base Color", Color) = (1, 1, 1, 1)
+    }
+
+    SubShader
+    {
+        Tags
+        {
+            "RenderType" = "Opaque" "RenderPipeline" = "UniversalPipeline"
+        }
+
+        Pass
+        {
+            Name "blend"
+            Tags
+            {
+                "LightMode" = "UniversalForward"
+            }
+            ZWrite off
+            ZTest Always
+            Cull off
+            Blend SrcAlpha OneMinusSrcAlpha, One OneMinusSrcAlpha
+
+            HLSLPROGRAM
+            #pragma vertex Vert
+            #pragma fragment Frag
+            #pragma target 3.0
+
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+
+            struct Attributes
+            {
+                float2 uv : TEXCOORD0;
+                float4 positionOS : POSITION;
+            };
+
+            struct Varyings
+            {
+                float2 uv : TEXCOORD0;
+                float4 positionCS : SV_POSITION;
+            };
+
+            TEXTURE2D(_BaseMap);
+            SAMPLER(sampler_BaseMap);
+
+            CBUFFER_START(UnityPerMaterial)
+                float4 _BaseMap_ST;
+                float4 _BaseColor;
+            CBUFFER_END
+
+            Varyings Vert(Attributes input)
+            {
+                Varyings o;
+
+                o.positionCS = TransformObjectToHClip(input.positionOS.xyz);
+                o.uv = TRANSFORM_TEX(input.uv, _BaseMap);
+
+                return o;
+            }
+
+            half4 Frag(Varyings input) : SV_Target
+            {
+                half4 color = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv);
+                return color * _BaseColor;
+            }
+            ENDHLSL
+        }
+    }
+}
