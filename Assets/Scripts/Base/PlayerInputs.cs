@@ -44,22 +44,22 @@ namespace Base
 #endif
 
 
-		public void MoveInput(Vector2 newMoveDirection)
+        private void MoveInput(Vector2 newMoveDirection)
 		{
 			move = newMoveDirection;
-		} 
+		}
 
-		public void LookInput(Vector2 newLookDirection)
+        private void LookInput(Vector2 newLookDirection)
 		{
 			look = newLookDirection;
 		}
 
-		public void JumpInput(bool newJumpState)
+        private void JumpInput(bool newJumpState)
 		{
 			jump = newJumpState;
 		}
 
-		public void SprintInput(bool newSprintState)
+        private void SprintInput(bool newSprintState)
 		{
 			sprint = newSprintState;
 		}

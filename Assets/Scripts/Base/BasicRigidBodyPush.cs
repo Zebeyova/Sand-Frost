@@ -15,8 +15,6 @@ namespace Base
 
         private void PushRigidBodies(ControllerColliderHit hit)
         {
-            // https://docs.unity3d.com/ScriptReference/CharacterController.OnControllerColliderHit.html
-
             // make sure we hit a non kinematic rigidbody
             Rigidbody body = hit.collider.attachedRigidbody;
             if (body == null || body.isKinematic) return;

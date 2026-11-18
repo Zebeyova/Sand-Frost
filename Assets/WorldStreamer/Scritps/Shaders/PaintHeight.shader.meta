@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: efac056c9e2e60b4e946177ad713806a
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 176482
+  packageName: World Streamer 2
+  packageVersion: 1.8.3
+  assetPath: Assets/NatureManufacture Assets/WorldStreamer/Scritps/Shaders/PaintHeight.shader
+  uploadId: 814202
