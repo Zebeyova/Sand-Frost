@@ -94,7 +94,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 20201, guid: 0000000000000000f000000000000000, type: 0}
-  m_LightingSettings: {fileID: 0}
+  m_LightingSettings: {fileID: 4890085278179872738, guid: 5bce4d73c3cfb0b4ab428cad05eb43b8, type: 2}
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -131,6 +131,7 @@ GameObject:
   - component: {fileID: 3684009}
   - component: {fileID: 3684008}
   - component: {fileID: 3684007}
+  - component: {fileID: 3684011}
   m_Layer: 0
   m_Name: Plane
   m_TagString: Untagged
@@ -226,12 +227,28 @@ Transform:
   m_GameObject: {fileID: 3684006}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.10452, y: -0, z: -2.37072}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3684011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3684006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1519882285d592d4e90990f9d91867f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SandEffects.RT_SandEffect
+  sandRT: {fileID: 8400000, guid: e6d54c0307d7b164c9dbecc8fe29452b, type: 2}
+  drawTex: {fileID: 2800000, guid: 503cd53e9635b0046bb6e16630f54701, type: 3}
+  blendMaterial: {fileID: 0}
+  mainCamera: {fileID: 0}
 --- !u!1 &1725189007
 GameObject:
   m_ObjectHideFlags: 0
@@ -446,7 +463,7 @@ Transform:
   m_GameObject: {fileID: 2039186047}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071069, y: 0.00000008940697, z: -0.000000014901161, w: 0.7071067}
-  m_LocalPosition: {x: -0.8875862, y: 12.021554, z: -0.52147734}
+  m_LocalPosition: {x: 0, y: 10, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

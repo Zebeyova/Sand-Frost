@@ -1,4 +1,4 @@
-Shader "Zebeyova/URP/blend"
+Shader "Zebeyova/URP/sandTrack"
 {
     Properties
     {
@@ -17,15 +17,11 @@ Shader "Zebeyova/URP/blend"
 
         Pass
         {
-            Name "blend"
+            Name "sandTrack"
             Tags
             {
                 "LightMode" = "UniversalForward"
             }
-            ZWrite off
-            ZTest Always
-            Cull off
-            Blend SrcAlpha OneMinusSrcAlpha, One OneMinusSrcAlpha
 
             HLSLPROGRAM
             #pragma vertex Vert
@@ -36,14 +32,20 @@ Shader "Zebeyova/URP/blend"
 
             struct Attributes
             {
-                float2 uv : TEXCOORD0;
-                float4 positionOS : POSITION;
+                float2 uv: TEXCOORD0;
+                float3 positionOS: POSITION;
+                float3 normalOS: NORMAL;
+                float4 tangentOS: TANGENT;
             };
 
             struct Varyings
             {
                 float2 uv : TEXCOORD0;
-                float4 positionCS : SV_POSITION;
+                float4 positionCS: SV_POSITION;
+                float3 postionWS: TEXCOORD1;
+                float3 normalWS: TEXCOORD2;
+                float3 tangentWS: TEXCOORD3;
+                float3 bitangentWS: TEXCOORD4;
             };
 
             TEXTURE2D(_BaseMap);
@@ -58,9 +60,17 @@ Shader "Zebeyova/URP/blend"
             {
                 Varyings o;
 
-                o.positionCS = TransformObjectToHClip(input.positionOS.xyz);
-                o.uv = TRANSFORM_TEX(input.uv, _BaseMap);
+                VertexPositionInputs posInput = GetVertexPositionInputs(input.positionOS);
+                o.postionWS = posInput.positionWS;
 
+                VertexNormalInputs norInput = GetVertexNormalInputs(input.normalOS, input.tangentOS);
+                o.normalWS = norInput.normalWS;
+                o.tangentWS = norInput.tangentWS;
+                o.bitangentWS = norInput.bitangentWS;
+
+                input.positionOS.xyz -= input.normalOS * SAMPLE_TEXTURE2D_LOD(_BaseMap, sampler_BaseMap, input.uv, 0);
+                o.positionCS = TransformObjectToHClip(input.positionOS);
+                o.uv = TRANSFORM_TEX(input.uv, _BaseMap);
                 return o;
             }
 

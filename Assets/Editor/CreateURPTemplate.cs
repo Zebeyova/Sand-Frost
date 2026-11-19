@@ -1,64 +1,75 @@
 using System.IO;
 using UnityEditor;
+using UnityEditor.ProjectWindowCallback;
 using UnityEngine;
 
 namespace Editor
 {
-    public class CreateURPTemplate
+    public static class CreateURPTemplate
     {
         private const string ShaderTemplatePath = "Assets/Shaders/ShaderTemplates";
 
-        [MenuItem("Assets/Create/shader/URP Shader Template")]
-        public static void CreateURPShader()
+        [MenuItem("Assets/Create/ShaderTemplate/URP Unlit Shader", false, 80)]
+        private static void CreateUnlitShader()
         {
-            CreateShaderFromTemplate("URPTemplate.shader.txt", "New URP Shader");
+            CreateShaderFromTemplate("URPTemplate_UnLit.template", "New UnLit Shader.shader");
         }
 
-        private static void CreateShaderFromTemplate(string templateName, string defaultShaderName)
+        [MenuItem("Assets/Create/ShaderTemplate/URP Lit Shader", false, 81)]
+        private static void CreateLitShader()
         {
-            string templatePath = Path.Combine(ShaderTemplatePath, templateName);
+            CreateShaderFromTemplate("URPTemplate_Lit.template", "New Lit Shader.shader");
+        }
+
+        private static void CreateShaderFromTemplate(string templateName, string defaultFileName)
+        {
+            string templatePath = Path.Combine(ShaderTemplatePath, templateName).Replace('\\', '/');
             if (!File.Exists(templatePath))
             {
                 Debug.LogError($"Template not found: {templatePath}");
                 return;
             }
 
-            string projectRoot = Path.GetDirectoryName(Application.dataPath);
-            if (projectRoot != null)
+            string folderPath = GetSelectedFolderPath();
+            string assetPath = AssetDatabase.GenerateUniqueAssetPath($"{folderPath}/{defaultFileName}");
+            Texture2D icon = EditorGUIUtility.IconContent("Shader Icon").image as Texture2D;
+
+            ProjectWindowUtil.StartNameEditingIfProjectWindowExists(
+                0, CreateShaderAssetAction.Create(templatePath),
+                assetPath, icon, null);
+        }
+
+        private static string GetSelectedFolderPath()
+        {
+            string selectedPath = AssetDatabase.GetAssetPath(Selection.activeObject);
+            if (AssetDatabase.IsValidFolder(selectedPath))
+                return selectedPath;
+
+            string parentPath = Path.GetDirectoryName(selectedPath)?.Replace('\\', '/');
+            return !string.IsNullOrEmpty(parentPath) && AssetDatabase.IsValidFolder(parentPath) ? parentPath : "Assets";
+        }
+
+        public class CreateShaderAssetAction : EndNameEditAction
+        {
+            [SerializeField] private string templatePath;
+
+            public static CreateShaderAssetAction Create(string templatePath)
             {
-                string defaultDir = Path.Combine(projectRoot, "Assets/Shaders");
-                string selectedPath = EditorUtility.SaveFilePanel("Save Shader As", defaultDir,
-                    defaultShaderName, "shader");
+                var action = CreateInstance<CreateShaderAssetAction>();
+                action.templatePath = templatePath;
+                return action;
+            }
 
-                if (string.IsNullOrEmpty(selectedPath))
-                    return;
+            public override void Action(int instanceId, string pathName, string resourceFile)
+            {
+                string shaderName = Path.GetFileNameWithoutExtension(pathName);
+                string shaderContent = File.ReadAllText(templatePath).Replace("#SHADERNAME#", shaderName);
 
-                if (!selectedPath.EndsWith(".shader", System.StringComparison.OrdinalIgnoreCase))
-                    selectedPath += ".shader";
+                File.WriteAllText(pathName, shaderContent);
+                AssetDatabase.ImportAsset(pathName);
 
-                string relativePath = selectedPath.Substring(projectRoot.Length + 1).Replace('\\', '/');
-                if (!relativePath.StartsWith("Assets/"))
-                {
-                    Debug.LogError("Shader 必须保存在 Assets 目录下。");
-                    return;
-                }
-
-                string shaderName = Path.GetFileNameWithoutExtension(selectedPath);
-                string templateContent = File.ReadAllText(templatePath);
-                string shaderContent = templateContent.Replace("#SCRIPTNAME#", shaderName);
-
-                // 6. 确保目录存在并写入
-                string outputDir = Path.GetDirectoryName(relativePath)?.Replace('\\', '/');
-                if (!Directory.Exists(outputDir))
-                    if (outputDir != null)
-                        Directory.CreateDirectory(outputDir);
-
-                File.WriteAllText(relativePath, shaderContent);
-                AssetDatabase.Refresh();
-
-                var asset = AssetDatabase.LoadAssetAtPath<Shader>(relativePath);
-                Selection.activeObject = asset;
-                EditorGUIUtility.PingObject(asset);
+                Object asset = AssetDatabase.LoadAssetAtPath<Shader>(pathName);
+                ProjectWindowUtil.ShowCreatedAsset(asset);
             }
         }
     }

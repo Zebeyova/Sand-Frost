@@ -1,4 +1,4 @@
-Shader "Zebeyova/URP/alphaBlend"
+Shader "Zebeyova/#SHADERNAME#"
 {
     Properties
     {
@@ -17,15 +17,13 @@ Shader "Zebeyova/URP/alphaBlend"
 
         Pass
         {
-            Name "blend"
+            Name "#SHADERNAME#"
             Tags
             {
                 "LightMode" = "UniversalForward"
             }
-            ZWrite off
-            ZTest Always
-            Cull off
-            Blend SrcAlpha OneMinusSrcAlpha, One OneMinusSrcAlpha
+
+            Cull Back
 
             HLSLPROGRAM
             #pragma vertex Vert
@@ -36,14 +34,14 @@ Shader "Zebeyova/URP/alphaBlend"
 
             struct Attributes
             {
-                float2 uv : TEXCOORD0;
-                float4 positionOS : POSITION;
+                float2 uv: TEXCOORD0;
+                float4 positionOS: POSITION;
             };
 
             struct Varyings
             {
-                float2 uv : TEXCOORD0;
-                float4 positionCS : SV_POSITION;
+                float2 uv: TEXCOORD0;
+                float4 positionCS: SV_POSITION;
             };
 
             TEXTURE2D(_BaseMap);
@@ -72,4 +70,5 @@ Shader "Zebeyova/URP/alphaBlend"
             ENDHLSL
         }
     }
+    Fallback "Hidden/Universal Render Pipeline/FallbackError"
 }
