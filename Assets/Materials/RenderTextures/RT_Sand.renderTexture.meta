@@ -1,8 +1,15 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Materials/RenderTextures/RT_Sand.renderTexture.meta
 guid: e6d54c0307d7b164c9dbecc8fe29452b
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 8400000
+========
+guid: 8c4181fd229fbf54b8a40b63a7ae376c
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+>>>>>>>> origin/main:Assets/Materials/Sand/Blend.mat.meta
   userData: 
   assetBundleName: 
   assetBundleVariant: 
