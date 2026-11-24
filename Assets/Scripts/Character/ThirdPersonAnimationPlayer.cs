@@ -8,7 +8,7 @@ namespace Character
     public sealed class ThirdPersonAnimationPlayer : IDisposable
     {
         private const int StateCount = 5;
-        private readonly PlayableGraph _graph;
+        private PlayableGraph _graph;
         private readonly AnimationMixerPlayable _mixer;
         private readonly AnimationClipPlayable[] _playables = new AnimationClipPlayable[StateCount];
         private readonly AnimationClip[] _clips;

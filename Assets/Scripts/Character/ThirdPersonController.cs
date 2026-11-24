@@ -22,7 +22,8 @@ namespace Character
 
         private const float _threshold = 0.01f;
 
-        [Header("Code Driven Animation")] [Tooltip("The Animator on the character model. No Animator Controller is required.")]
+        [Header("Code Driven Animation")]
+        [Tooltip("The Animator on the character model. No Animator Controller is required.")]
         public Animator CharacterAnimator;
         public AnimationClip IdleAnimation;
         public AnimationClip WalkAnimation;
@@ -33,13 +34,15 @@ namespace Character
         [Min(0f)] public float AnimationBlendDuration = 0.15f;
         [Range(0f, 1f)] public float JumpAirbornePose = 0.5f;
 
-        [Header("Player")] [Tooltip("Move speed of the character in m/s")]
+        [Header("Player")]
+        [Tooltip("Move speed of the character in m/s")]
         public float MoveSpeed = 2.0f;
 
         [Tooltip("Sprint speed of the character in m/s")]
         public float SprintSpeed = 5.335f;
 
-        [Tooltip("How fast the character turns to face movement direction")] [Range(0.0f, 0.3f)]
+        [Tooltip("How fast the character turns to face movement direction")]
+        [Range(0.0f, 0.3f)]
         public float RotationSmoothTime = 0.12f;
 
         [Tooltip("Acceleration and deceleration")]
@@ -49,19 +52,22 @@ namespace Character
         public AudioClip[] FootstepAudioClips;
         [Range(0, 1)] public float FootstepAudioVolume = 0.5f;
 
-        [Space(10)] [Tooltip("The height the player can jump")]
+        [Space(10)]
+        [Tooltip("The height the player can jump")]
         public float JumpHeight = 1.2f;
 
         [Tooltip("The character uses its own gravity value. The engine default is -9.81f")]
         public float Gravity = -15.0f;
 
-        [Space(10)] [Tooltip("Time required to pass before being able to jump again. Set to 0f to instantly jump again")]
+        [Space(10)]
+        [Tooltip("Time required to pass before being able to jump again. Set to 0f to instantly jump again")]
         public float JumpTimeout = 0.50f;
 
         [Tooltip("Time required to pass before entering the fall state. Useful for walking down stairs")]
         public float FallTimeout = 0.15f;
 
-        [Header("Player Grounded")] [Tooltip("If the character is grounded or not. Not part of the CharacterController built in grounded check")]
+        [Header("Player Grounded")]
+        [Tooltip("If the character is grounded or not. Not part of the CharacterController built in grounded check")]
         public bool Grounded = true;
 
         [Tooltip("Useful for rough ground")] public float GroundedOffset = -0.14f;
@@ -126,18 +132,20 @@ namespace Character
             }
         }
 
+        private void OnEnable()
+        {
+            if (_started) InitializeAnimation();
+        }
 
         private void Awake()
         {
             // get a reference to our main camera
-            if (_mainCamera == null)
-                _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
+            if (_mainCamera == null) _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
         }
 
         private void Start()
         {
-            if (CinemachineCameraTarget != null)
-                _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
+            if (CinemachineCameraTarget != null) _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
 
             _controller = GetComponent<CharacterController>();
             _input = GetComponent<PlayerInputs>();
@@ -162,9 +170,7 @@ namespace Character
             GroundedCheck();
             UpdateCharacterState();
 
-            float jumpProgress = _jumpTakeoffVelocity > 0f
-                ? Mathf.Clamp01(1f - _verticalVelocity / _jumpTakeoffVelocity)
-                : 1f;
+            float jumpProgress = _jumpTakeoffVelocity > 0f ? Mathf.Clamp01(1f - _verticalVelocity / _jumpTakeoffVelocity) : 1f;
             _animationPlayer?.Tick(Time.deltaTime, jumpProgress);
         }
 
@@ -173,10 +179,6 @@ namespace Character
             CameraRotation();
         }
 
-        private void OnEnable()
-        {
-            if (_started) InitializeAnimation();
-        }
 
         private void OnDisable()
         {
@@ -406,7 +408,7 @@ namespace Character
 
         private void PlayLandingAudio()
         {
-            if (LandingAudioClip != null)
+            if (LandingAudioClip)
                 AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center),
                     FootstepAudioVolume);
         }

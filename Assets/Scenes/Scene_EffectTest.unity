@@ -119,7 +119,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &3684006
+--- !u!1 &884429447
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -127,11 +127,10 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3684010}
-  - component: {fileID: 3684009}
-  - component: {fileID: 3684008}
-  - component: {fileID: 3684007}
-  - component: {fileID: 3684011}
+  - component: {fileID: 884429454}
+  - component: {fileID: 884429453}
+  - component: {fileID: 884429452}
+  - component: {fileID: 884429451}
   m_Layer: 0
   m_Name: Plane
   m_TagString: Untagged
@@ -139,13 +138,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!64 &3684007
+--- !u!64 &884429451
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3684006}
+  m_GameObject: {fileID: 884429447}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -161,13 +160,13 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &3684008
+--- !u!23 &884429452
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3684006}
+  m_GameObject: {fileID: 884429447}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -186,7 +185,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: ee6992f60225bc44a999e30b3e5937dd, type: 2}
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -210,21 +209,21 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &3684009
+--- !u!33 &884429453
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3684006}
+  m_GameObject: {fileID: 884429447}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
---- !u!4 &3684010
+--- !u!4 &884429454
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3684006}
+  m_GameObject: {fileID: 884429447}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -233,22 +232,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3684011
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3684006}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1519882285d592d4e90990f9d91867f5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SandEffects.RT_SandEffect
-  sandRT: {fileID: 8400000, guid: e6d54c0307d7b164c9dbecc8fe29452b, type: 2}
-  drawTex: {fileID: 2800000, guid: 503cd53e9635b0046bb6e16630f54701, type: 3}
-  blendMaterial: {fileID: 0}
-  mainCamera: {fileID: 0}
 --- !u!1 &1725189007
 GameObject:
   m_ObjectHideFlags: 0
@@ -519,4 +502,4 @@ SceneRoots:
   m_Roots:
   - {fileID: 2039186050}
   - {fileID: 1725189009}
-  - {fileID: 3684010}
+  - {fileID: 884429454}

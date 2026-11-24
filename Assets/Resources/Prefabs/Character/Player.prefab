@@ -98,7 +98,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26e54e5a728a9234ab24fcf1460ed8a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CharacterAnimator: {fileID: 7256171953416122701}
+  CharacterAnimator: {fileID: 6525374022408046475}
   IdleAnimation: {fileID: 4731144404332829681, guid: 886d41d9dce057d4d8ad014d30b89029, type: 3}
   WalkAnimation: {fileID: -5152687813255997369, guid: 886d41d9dce057d4d8ad014d30b89029, type: 3}
   RunAnimation: {fileID: 7341928005319000166, guid: 886d41d9dce057d4d8ad014d30b89029, type: 3}
@@ -132,7 +132,7 @@ MonoBehaviour:
   GroundedRadius: 0.28
   GroundLayers:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 65
   CinemachineCameraTarget: {fileID: 8338988566280778634}
   TopClamp: 70
   BottomClamp: -30
@@ -358,7 +358,7 @@ PrefabInstance:
     - target: {fileID: 5866666021909216657, guid: 886d41d9dce057d4d8ad014d30b89029, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 9100000, guid: 7b2bf2ea951e5504bae2ca3909ba914c, type: 2}
     - target: {fileID: 5866666021909216657, guid: 886d41d9dce057d4d8ad014d30b89029, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 0
@@ -366,14 +366,55 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: -4997698619889952577, guid: 886d41d9dce057d4d8ad014d30b89029, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 9093764889550626026}
   m_SourcePrefab: {fileID: 100100000, guid: 886d41d9dce057d4d8ad014d30b89029, type: 3}
 --- !u!4 &895906045552778737 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 886d41d9dce057d4d8ad014d30b89029, type: 3}
   m_PrefabInstance: {fileID: 856911741231118874}
   m_PrefabAsset: {fileID: 0}
---- !u!95 &7256171953416122701 stripped
+--- !u!4 &1877200278277800702 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -7932674005940406044, guid: 886d41d9dce057d4d8ad014d30b89029, type: 3}
+  m_PrefabInstance: {fileID: 856911741231118874}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &2044694442280274212 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1694596403321762622, guid: 886d41d9dce057d4d8ad014d30b89029, type: 3}
+  m_PrefabInstance: {fileID: 856911741231118874}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &3549055471468864165 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -4997698619889952577, guid: 886d41d9dce057d4d8ad014d30b89029, type: 3}
+  m_PrefabInstance: {fileID: 856911741231118874}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &9093764889550626026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3549055471468864165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4669379190a442eb9e9a929d0a80fc2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TrackSystem.TrackPrint
+  leftFoot: {fileID: 1877200278277800702}
+  rightFoot: {fileID: 2044694442280274212}
+  layer:
+    serializedVersion: 2
+    m_Bits: 64
+  raycastHeight: 0.25
+  raycastDistance: 0.7
+  footprintWidth: 0.18
+  footprintLength: 0.3
+  stepDistance: 0.35
+  strength: 0.8
+--- !u!95 &6525374022408046475 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 886d41d9dce057d4d8ad014d30b89029, type: 3}
   m_PrefabInstance: {fileID: 856911741231118874}

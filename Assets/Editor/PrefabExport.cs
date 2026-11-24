@@ -33,7 +33,7 @@ namespace Editor
             "volatile", "while"
         };
 
-        [MenuItem("Tools/Prefab Exporter")]
+        [MenuItem("Tools/ZLibTools/Prefab Exporter")]
         public static void ShowWindow()
         {
             var window = GetWindow<PrefabExporter>("Prefab Exporter");
