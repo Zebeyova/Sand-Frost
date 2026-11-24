@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace TrackSystem
+namespace Assets.Scripts.TrackSystem
 {
     public class TrackPrint : MonoBehaviour
     {

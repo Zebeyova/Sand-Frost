@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace TrackSystem
+namespace Assets.Scripts.TrackSystem
 {
     public class SandTileManager : MonoBehaviour
     {
@@ -9,13 +9,11 @@ namespace TrackSystem
 
         [Header("Tile Settings")]
         public float patchSize = 16f;
-        public int resolution = 160;
-        public int textureResolution = 512;
+        // public int resolution = 160;
         public float thickness = 0.006f;
 
         [Header("Materials")]
         public Material stampMaterial;
-        public Shader sandShader;
 
         [Header("Memory")]
         [Range(4, 64)] public int maxActivePatches = 25;
@@ -39,6 +37,17 @@ namespace TrackSystem
             _player = target;
         }
 
+        public void AddFootprint(Vector3 position, Vector3 forward, Vector3 surfaceNormal, float width, float length, float strength)
+        {
+            SandPatch patch = GetOrCreatePatch(WorldToTile(position));
+            patch.AddFootprint(position, forward, surfaceNormal, width, length, strength);
+        }
+
+        private Vector2Int WorldToTile(Vector3 position)
+        {
+            return new Vector2Int(Mathf.FloorToInt(position.x / patchSize), Mathf.FloorToInt(position.z / patchSize));
+        }
+
         private SandPatch GetOrCreatePatch(Vector2Int coordinate)
         {
             if (_patches.TryGetValue(coordinate, out SandPatch existing)) return existing;
@@ -48,10 +57,10 @@ namespace TrackSystem
             go.transform.SetParent(transform, false);
 
             SandPatch patch = go.AddComponent<SandPatch>();
-            patch.patchSize = patchSize;
-            patch.resolution = resolution;
+            // patch.patchSize = patchSize;
+            // patch.resolution = resolution;
             patch.thickness = thickness;
-            patch.Initialize(coordinate, stampMaterial);
+            patch.Initialize(stampMaterial);
 
             _patches.Add(coordinate, patch);
             return patch;
@@ -77,17 +86,6 @@ namespace TrackSystem
 
             if (!_patches.Remove(farthest, out SandPatch patch)) return;
             if (patch != null) Destroy(patch.gameObject);
-        }
-
-        public void AddFootprint(Vector3 position, Vector3 forward, Vector3 surfaceNormal, float width, float length, float strength)
-        {
-            SandPatch patch = GetOrCreatePatch(WorldToTile(position));
-            patch.AddFootprint(position, forward, surfaceNormal, width, length, strength);
-        }
-
-        private Vector2Int WorldToTile(Vector3 position)
-        {
-            return new Vector2Int(Mathf.FloorToInt(position.x / patchSize), Mathf.FloorToInt(position.z / patchSize));
         }
 
         private void OnDestroy()
