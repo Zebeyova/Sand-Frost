@@ -1,22 +1,24 @@
 Shader "Zebeyova/SandTrackStamp" {
     Properties {
         _MainTex ("Foot Main Tex", 2D) = "white" {}
+        _StampUV ("Stamp UV", Vector) =  (0.5, 0.5, 0.01, 0.02)
+        _StampAngle ("Stamp Angle", float) = 0
         _StampStrength ("Stamp Strength", Range(0,1)) = 0.8
-        _ImprintColor ("Imprint Color", Color) =  (0.72, 0.68, 0.6, 1)
+        _RidgeStrength ("Ridge Strength", Range(0,1)) = 0.5
+        _Fade ("Fade", Range(0,1)) = 0.5
     }
 
     SubShader {
-        Tags { "Queue" = "Transparent-10" "RenderType" = "Transparent" "RenderPipeline" = "UniversalPipeline" }
+        Tags { "RenderPipeline" = "UniversalPipeline" }
 
         Pass {
             Name "SandTrackStamp"
             Tags { "LightMode" = "UniversalForward" }
 
-            ZTest LEqual
+            Blend One Zero
             ZWrite Off
+            ZTest Always
             Cull Off
-            Blend DstColor Zero
-            ColorMask RGB
 
             HLSLPROGRAM
             #pragma vertex Vert
@@ -26,9 +28,15 @@ Shader "Zebeyova/SandTrackStamp" {
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 
+            TEXTURE2D(_MainTex);
+            SAMPLER(sampler_MainTex);
+
             CBUFFER_START(UnityPerMaterial)
-            half4 _ImprintColor;
-            half _StampStrength;
+            float4 _StampUV;
+            float _StampAngle;
+            float _StampStrength;
+            float _RidgeStrength;
+            float _Fade;
             CBUFFER_END
 
             struct Attributes {
@@ -54,16 +62,26 @@ Shader "Zebeyova/SandTrackStamp" {
             }
 
             half4 Frag(Varyings input) : SV_Target {
-                float2 centerUV = input.uv * 2.0 - 1.0;
-                float disToCenter = length(centerUV);
-                half footprint = 1.0h - smoothstep(0.72h, 1.0h, disToCenter);
+                float2 offset = input.uv - _StampUV.xy;
 
-                half mask = saturate(footprint * _StampStrength);
-                half NdotL = saturate(dot(normalize(input.normalWS), normalize(GetMainLight().direction)));
-                half edgeLight = lerp(0.72h, 1.08h, NdotL);
-                half3 darkened = lerp(half3(1.0h, 1.0h, 1.0h), _ImprintColor.rgb * edgeLight, mask);
+                float s, c;
+                sincos(_StampAngle, s, c);
+                half2 rotated = float2(offset.x * c - offset.y * s, offset.x * s + offset.y * c);
+                half2 halfSize = max(_StampUV.zw, 0.00001);
+                half2 ellipse = abs(rotated) / halfSize;
+                half disToCenter = length(ellipse);
 
-                return half4(darkened, 1.0h);
+                //脚印中心下陷
+                half depression = 1.0h - smoothstep(0.55h, 1.0h, disToCenter);
+                //脚印外围堆积
+                half outer = 1.0 - smoothstep(0.95h, 1.25h, disToCenter);
+                half ridge = saturate(outer - depression);
+
+                half4 oldData = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, input.uv);
+                half depressionData = max(oldData.r * _Fade, depression * _StampStrength);
+                half ridgeData = max(oldData.g * _Fade, ridge * _StampStrength * _RidgeStrength);
+
+                return half4(depressionData, ridgeData, 0, 1);
             }
             ENDHLSL
         }

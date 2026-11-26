@@ -11,8 +11,6 @@ namespace Editor
     {
         [SerializeField] private DefaultAsset targetFolder;
         [SerializeField] private string targetLayer = "SandFrostGround";
-        private Vector2 _scrollPosition;
-
         [MenuItem("Tools/ZLibTools/Terrain Layer Batch Tool")]
         public static void OpenWindow()
         {

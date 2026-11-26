@@ -119,7 +119,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &704558979
+--- !u!1 &282465867
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -127,10 +127,10 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 704558980}
-  - component: {fileID: 704558983}
-  - component: {fileID: 704558982}
-  - component: {fileID: 704558981}
+  - component: {fileID: 282465868}
+  - component: {fileID: 282465871}
+  - component: {fileID: 282465870}
+  - component: {fileID: 282465869}
   m_Layer: 6
   m_Name: Terrain 7_7
   m_TagString: Untagged
@@ -138,41 +138,41 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
   m_IsActive: 1
---- !u!4 &704558980
+--- !u!4 &282465868
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 704558979}
+  m_GameObject: {fileID: 282465867}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1536.75, y: -50, z: 1536.75}
+  m_LocalPosition: {x: 1536.75, y: 0, z: 1536.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2108907841}
+  m_Father: {fileID: 984388318}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &704558981
+--- !u!114 &282465869
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 704558979}
+  m_GameObject: {fileID: 282465867}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b370cc075cf087f4f8203af2e29003af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorldStreamer2.TerrainCullingSystem
   renderingDistance: 10000
---- !u!154 &704558982
+--- !u!154 &282465870
 TerrainCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 704558979}
+  m_GameObject: {fileID: 282465867}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -186,13 +186,13 @@ TerrainCollider:
   serializedVersion: 2
   m_TerrainData: {fileID: 15600000, guid: e1d259b2c7f5cc74e89e9acc33f9f0d3, type: 2}
   m_EnableTreeColliders: 1
---- !u!218 &704558983
+--- !u!218 &282465871
 Terrain:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 704558979}
+  m_GameObject: {fileID: 282465867}
   m_Enabled: 1
   serializedVersion: 6
   m_TerrainData: {fileID: 15600000, guid: e1d259b2c7f5cc74e89e9acc33f9f0d3, type: 2}
@@ -227,7 +227,7 @@ Terrain:
   m_EnableTreesAndDetailsRayTracing: 0
   m_EnableHeightmapLODFrustumCulling: 1
   m_TreeMotionVectorModeOverride: 3
---- !u!1 &2108907839
+--- !u!1 &984388316
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -235,8 +235,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2108907841}
-  - component: {fileID: 2108907840}
+  - component: {fileID: 984388318}
+  - component: {fileID: 984388317}
   m_Layer: 0
   m_Name: Terrain_x3_z3
   m_TagString: Untagged
@@ -244,13 +244,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &2108907840
+--- !u!114 &984388317
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2108907839}
+  m_GameObject: {fileID: 984388316}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0a7da46708b97c940a4fe54d35254afe, type: 3}
@@ -261,24 +261,24 @@ MonoBehaviour:
   position: {x: 1536, y: 0, z: 1536}
   size: {x: 512, y: 100, z: 512}
   wsPosition: {x: 10, y: 10, z: 10}
---- !u!4 &2108907841
+--- !u!4 &984388318
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2108907839}
+  m_GameObject: {fileID: 984388316}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 704558980}
+  - {fileID: 282465868}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 2108907841}
+  - {fileID: 984388318}

@@ -223,13 +223,21 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e08949c696e4de49683f405dcbc2346, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TrackSystem.SandTileManager
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.TrackSystem.SandTileManager
   patchSize: 16
-  resolution: 160
-  textureResolution: 512
-  thickness: 0.006
+  thickness: 0.5
+  meshResolution: 64
+  texResolution: 128
+  sandSurfaceShader: {fileID: -6465566751694194690, guid: e9cb9ab6d0b87bb48b54de7d2f39735c, type: 3}
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 65
+  depressionHeight: 0.06
+  ridgeHeight: 0.05
+  ridgeStrength: 0.8
+  fadeHalfLife: 20
+  fadeInterval: 0.1
   stampMaterial: {fileID: 2100000, guid: ee6992f60225bc44a999e30b3e5937dd, type: 2}
-  sandShader: {fileID: -6465566751694194690, guid: e9cb9ab6d0b87bb48b54de7d2f39735c, type: 3}
   maxActivePatches: 25
 --- !u!1 &500507251
 GameObject:
